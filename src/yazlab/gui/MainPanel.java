@@ -19,26 +19,24 @@ public class MainPanel extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
 
-        // Create panel with custom background
-        panel = new BackgroundPanel("/home/yunus/NetBeansProjects/Yazlab1/bg3.jpg");
+        panel = new BackgroundPanel("bg3.jpg");
         panel.setLayout(new GridLayout(4, 1, 10, 10));
 
-        // Create buttons with icons
-        RoundedButton addRecipeButton = createButton("Recipe Menu", "/home/yunus/NetBeansProjects/Yazlab1/rcp11.png");
-        RoundedButton addIngredientButton = createButton("Ingredient Menu", "/home/yunus/NetBeansProjects/Yazlab1/ing1.png");
+        RoundedButton addRecipeButton = createButton("Recipe Menu", "rcp11.png");
+        RoundedButton addIngredientButton = createButton("Ingredient Menu", "ing1.png");
 
         // Add action listeners
         addRecipeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Add Recipe Button Clicked");
+                new RecipeFrame().setVisible(true);;
             }
         });
 
         addIngredientButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Add Ingredient Button Clicked");
+                new IngredientPanel().setVisible(true);;
             }
         });
 
@@ -78,6 +76,7 @@ public class MainPanel extends JFrame {
 
     // Inner class for the background panel
     class BackgroundPanel extends JPanel {
+
         private Image backgroundImage;
 
         public BackgroundPanel(String imagePath) {
@@ -95,6 +94,7 @@ public class MainPanel extends JFrame {
 
     // Custom button class with rounded corners
     class RoundedButton extends JButton {
+
         private static final int RADIUS = 20; // Radius for the rounded corners
 
         public RoundedButton(String text) {

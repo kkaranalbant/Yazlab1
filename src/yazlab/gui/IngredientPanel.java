@@ -29,7 +29,7 @@ public class IngredientPanel extends JFrame {
         ingredientService = IngredientService.getInstance();
         setTitle("Ingredient Panel");
         setSize(400, 200);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(2, 2));
 
         JButton addButton = new JButton("Add Ingredient");

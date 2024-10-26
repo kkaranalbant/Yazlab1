@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import yazlab.exception.IngredientException;
 import yazlab.exception.RecipeException;
@@ -109,6 +110,7 @@ public class RecipeFrame extends javax.swing.JFrame {
         updateAddIngredientButton.setVisible(false);
         updateButton.setVisible(false);
         updateInstructionTf.setVisible(false);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
     }
 
