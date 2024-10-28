@@ -667,15 +667,30 @@ public class RecipeFrame2 extends JFrame {
         // Create and style the components
         JLabel nameLabel = new JLabel("Recipe Name:");
         JTextField nameField = new JTextField(20);
+        nameField.setText(originalName);
 
         JLabel categoryLabel = new JLabel("Category:");
         JComboBox<Category> categoryComboBox = new JComboBox<>(Category.values());
-
+        try {
+            categoryComboBox.setSelectedItem(recipeService.getByName(originalName).getCategory());
+        } catch (SQLException | RecipeException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
         JLabel prepTimeLabel = new JLabel("Preparation Time (min):");
         JTextField prepTimeField = new JTextField(5);
+        try {
+            prepTimeField.setText(String.valueOf(recipeService.getByName(originalName).getPreperationTimeInMinute()));
 
+        } catch (SQLException | RecipeException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
         JLabel instructionsLabel = new JLabel("Instructions:");
         JTextArea instructionsArea = new JTextArea(5, 20);
+        try {
+            instructionsArea.setText(recipeService.getByName(originalName).getInstructions());
+        } catch (SQLException | RecipeException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
         instructionsArea.setLineWrap(true);
         instructionsArea.setWrapStyleWord(true);
         JScrollPane instructionsScrollPane = new JScrollPane(instructionsArea);
@@ -731,10 +746,10 @@ public class RecipeFrame2 extends JFrame {
                     String ingredientName = ingredientService.getById(recipeIngredientToRemove.getIngredientId()).getName();
                     ingredientsToAddComboBox.addItem(ingredientName);
                     ingredientsToRemove.removeItem(recipeIngredientToRemove);
+                    recipeIngredientService.deleteByRecipeIdAndIngredientId(recipeIngredientToRemove.getRecipeId(), recipeIngredientToRemove.getIngredientId());
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
-
             }
 
         });
@@ -750,7 +765,8 @@ public class RecipeFrame2 extends JFrame {
                     recipeIngredient.setRecipeId(recipeService.getByName(originalName).getId());
                     ingredientsToAddComboBox.removeItem(ingredientName);
                     ingredientsToRemove.addItem(recipeIngredient);
-                } catch (SQLException ex) {
+                    recipeIngredientService.create(new RecipeIngredientAddingRequest(originalName, ingredientName, Float.parseFloat(usingAmountField.getText()), (Unit) units.getSelectedItem()));
+                } catch (SQLException | NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
             }
@@ -764,7 +780,6 @@ public class RecipeFrame2 extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10); // Padding
 
-        // Add components to the panel
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(nameLabel, gbc);
@@ -814,37 +829,37 @@ public class RecipeFrame2 extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        panel.add(new JLabel("Quantity:"), gbc);
+        panel.add(usingAmountLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 5;
-        panel.add(quantityField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        panel.add(unitLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        panel.add(units, gbc);
+        panel.add(usingAmountField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 7;
-        gbc.gridwidth = 2;
-        panel.add(addIngredientButton, gbc);
+        panel.add(unitLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 7;
+        panel.add(units, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 8;
         gbc.gridwidth = 2;
-        panel.add(ingredientsToRemove, gbc);
+        panel.add(addIngredientButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 9;
         gbc.gridwidth = 2;
-        panel.add(removeIngredientButton, gbc);
+        panel.add(ingredientsToRemove, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        panel.add(removeIngredientButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 11;
         gbc.gridwidth = 2;
         panel.add(updateButton, gbc);
 
