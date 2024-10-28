@@ -4,6 +4,8 @@
  */
 package yazlab.gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import yazlab.model.Ingredient;
 import yazlab.model.RecipeIngredient;
 import yazlab.service.IngredientService;
@@ -12,8 +14,10 @@ import yazlab.service.RecipeService;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import yazlab.exception.IngredientException;
 import yazlab.exception.RecipeException;
@@ -1087,9 +1091,24 @@ public class RecipeFrame extends javax.swing.JFrame {
                         .append("\n").append("Using Amount : ").append(recipeIngredient.getUsingAmount())
                         .append("\n").append("Using Unit : ").append(recipeIngredient.getUnit().name())
                         .append("\n").append("Price : ").append(UnitAndPriceConversation.calculatePrice(ingredient.getUnit(), ingredient.getUnitPrice(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount()))
-                        .append("\n") ;
+                        .append("\n");
                 if (!UnitAndPriceConversation.isSufficentUsingAmount(ingredient.getUnit(), ingredient.getAmount(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount())) {
-                    sb.append("There is less in the warehouse than the specified amount").append("\n") ;
+                    sb.append("There is less in the warehouse than the specified amount").append("\n");
+                    recipeList.setRenderer(new DefaultListCellRenderer() {
+
+                        @Override
+                        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                            Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                            if (selectedRecipe.equals(value)) {
+                                component.setForeground(Color.RED); 
+                            }
+                            else {
+                                component.setForeground(Color.BLACK); 
+                            }
+                            return component ;
+                        }
+
+                    });
                 }
             }
             infoMessage = sb.toString();
