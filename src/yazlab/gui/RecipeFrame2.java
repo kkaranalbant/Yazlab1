@@ -20,6 +20,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -56,28 +57,29 @@ import yazlab.exception.RecipeIngredientException;
 import yazlab.model.Recipe;
 import yazlab.model.RecipeIngredient;
 import yazlab.model.Unit;
+import yazlab.request.FilterRequest;
 import yazlab.request.RecipeAddingRequest;
 import yazlab.request.RecipeIngredientAddingRequest;
 import yazlab.request.RecipeIngredientAddingRequestGui;
 import yazlab.service.UnitAndPriceConversation;
 
 public class RecipeFrame2 extends JFrame {
-    
+
     private JButton addRecipeButton;
     private JButton removeRecipeButton;
     private JButton showRecipesButton;
     private JButton updateRecipesButton;
-    
+
     private IngredientService ingredientService;
     private RecipeService recipeService;
     private RecipeIngredientService recipeIngredientService;
-    
+
     public RecipeFrame2() {
-        
+
         ingredientService = IngredientService.getInstance();
         recipeService = RecipeService.getInstance();
         recipeIngredientService = RecipeIngredientService.getInstance();
-        
+
         setTitle("Recipe Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -136,13 +138,13 @@ public class RecipeFrame2 extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(30, 150, 80)); // Darker shade on hover
             }
-            
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(60, 179, 113)); // Reset to original color
             }
         });
-        
+
         return button;
     }
 
@@ -157,13 +159,13 @@ public class RecipeFrame2 extends JFrame {
         // Create input fields for recipe information
         JLabel nameLabel = new JLabel("Recipe Name:");
         JTextField nameField = new JTextField(20);
-        
+
         JLabel categoryLabel = new JLabel("Category:");
         JComboBox<Category> categoryComboBox = new JComboBox<>(Category.values());
-        
+
         JLabel prepTimeLabel = new JLabel("Preparation Time (min):");
         JTextField prepTimeField = new JTextField(5);
-        
+
         JLabel instructionsLabel = new JLabel("Instructions:");
         JTextArea instructionsArea = new JTextArea(5, 20);
         instructionsArea.setLineWrap(true);
@@ -181,11 +183,11 @@ public class RecipeFrame2 extends JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        
+
         JTextField quantityField = new JTextField(5);
         JLabel unitLabel = new JLabel("Unit:");
         JComboBox<Unit> units = new JComboBox(Unit.values());
-        
+
         JButton addIngredientButton = new JButton("Add Ingredient");
         JComboBox<RecipeIngredient> ingredientsToRemove = new JComboBox();
 
@@ -229,7 +231,7 @@ public class RecipeFrame2 extends JFrame {
             Category category = (Category) categoryComboBox.getSelectedItem();
             String prepTimeStr = prepTimeField.getText();
             String instructions = instructionsArea.getText();
-            
+
             try {
                 Integer prepTime = Integer.parseInt(prepTimeStr);
                 recipeService.addRecipe(new RecipeAddingRequest(name, category, prepTime, instructions));
@@ -251,7 +253,7 @@ public class RecipeFrame2 extends JFrame {
             } catch (SQLException | NumberFormatException | RecipeException | IngredientException | RecipeIngredientException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
-            
+
             JOptionPane.showMessageDialog(addRecipeDialog, "Recipe added successfully!");
             addRecipeDialog.dispose(); // Close the dialog
         });
@@ -271,66 +273,66 @@ public class RecipeFrame2 extends JFrame {
         panel.add(nameLabel, gbc);
         gbc.gridx = 1;
         panel.add(nameField, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(categoryLabel, gbc);
         gbc.gridx = 1;
         panel.add(categoryComboBox, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(prepTimeLabel, gbc);
         gbc.gridx = 1;
         panel.add(prepTimeField, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(instructionsLabel, gbc);
         gbc.gridx = 1;
         panel.add(instructionsScrollPane, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(ingredientLabel, gbc);
         gbc.gridx = 1;
         panel.add(ingredientComboBox, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(new JLabel("Quantity:"), gbc);
         gbc.gridx = 1;
         panel.add(quantityField, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(unitLabel, gbc);
         gbc.gridx = 1;
         panel.add(units, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(addIngredientButton, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(new JLabel("Ingredients to Remove:"), gbc);
         gbc.gridx = 1;
         panel.add(ingredientsToRemove, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(removeIngredientButton, gbc);
-        
+
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -339,13 +341,13 @@ public class RecipeFrame2 extends JFrame {
 
         // Add the panel to the dialog
         addRecipeDialog.add(panel);
-        
-        panel.setPreferredSize(new Dimension(500,500));
+
+        panel.setPreferredSize(new Dimension(500, 500));
 
         // Set the dialog to be visible
         addRecipeDialog.setVisible(true);
     }
-    
+
     private void openRemoveRecipePanel() {
         // Create a JDialog for removing a recipe
         JDialog removeDialog = new JDialog(this, "Remove Recipe", true); // true for modal
@@ -372,13 +374,13 @@ public class RecipeFrame2 extends JFrame {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST; // Align label to the left
         panel.add(nameLabel, gbc);
-        
+
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1.0; // Allow the text field to expand
         gbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontally
         panel.add(recipeNameField, gbc);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2; // Make button span both columns
@@ -395,7 +397,7 @@ public class RecipeFrame2 extends JFrame {
                     try {
                         recipeService.deleteRecipeByName(recipeName);
                     } catch (SQLException | RecipeException ex) {
-                        
+
                     }
                     JOptionPane.showMessageDialog(removeDialog,
                             "Recipe \"" + recipeName + "\" has been removed.",
@@ -415,7 +417,7 @@ public class RecipeFrame2 extends JFrame {
         removeDialog.add(panel);
         removeDialog.setVisible(true); // Show the dialog
     }
-    
+
     private void openShowRecipesPanel() {
         // Create a JDialog for showing recipes
         JDialog showDialog = new JDialog(this, "Show Recipes", true); // true for modal
@@ -423,8 +425,49 @@ public class RecipeFrame2 extends JFrame {
         showDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         showDialog.setLocationRelativeTo(this); // Center the dialog
 
+        // Filter fields
+        JPanel filterPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        filterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Name label and text field
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+        filterPanel.add(nameLabel);
+        filterPanel.add(nameField);
+
+        // Max Price label and text field
+        JLabel maxPriceLabel = new JLabel("Max Price:");
+        JTextField maxPriceField = new JTextField();
+        filterPanel.add(maxPriceLabel);
+        filterPanel.add(maxPriceField);
+
+        // Max Ingredient Amount label and text field
+        JLabel maxIngredientAmountLabel = new JLabel("Max Ingredient Amount:");
+        JTextField maxIngredientAmountField = new JTextField();
+        filterPanel.add(maxIngredientAmountLabel);
+        filterPanel.add(maxIngredientAmountField);
+
+        // Max Preparation Time label and text field
+        JLabel maxPrepTimeLabel = new JLabel("Max Preparation Time:");
+        JTextField maxPrepTimeField = new JTextField();
+        filterPanel.add(maxPrepTimeLabel);
+        filterPanel.add(maxPrepTimeField);
+
+        // Category ComboBox
+        JLabel categoryLabel = new JLabel("Category:");
+        JComboBox<String> categoryComboBox = new JComboBox<>();
+        categoryComboBox.addItem("All");
+        // Populate ComboBox with category options
+        for (Category category : Category.values()) {
+            categoryComboBox.addItem(category.name());
+        }
+        filterPanel.add(categoryLabel);
+        filterPanel.add(categoryComboBox);
+
+        // Recipe list and recipe information display area
         JComboBox<Recipe> recipeList = new JComboBox<>();
-        
+        JTextArea recipeInfo = new JTextArea();
+
         try {
             for (Recipe recipe : recipeService.getAll()) {
                 recipeList.addItem(recipe);
@@ -432,11 +475,9 @@ public class RecipeFrame2 extends JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        
-        JTextArea recipeInfo = new JTextArea();
-        
+
+        // Recipe selection event listener
         recipeList.addItemListener(new ItemListener() {
-            
             @Override
             public void itemStateChanged(ItemEvent e) {
                 Recipe selectedRecipe = (Recipe) recipeList.getSelectedItem();
@@ -446,22 +487,24 @@ public class RecipeFrame2 extends JFrame {
                         return;
                     }
                     StringBuilder sb = new StringBuilder();
-                    sb.append("Name : ").append(selectedRecipe.getName()).append("\n").append("Preparation Time (In Minute) : ").append(selectedRecipe.getPreperationTimeInMinute())
+                    sb.append("Name : ").append(selectedRecipe.getName()).append("\n")
+                            .append("Preparation Time (In Minute) : ").append(selectedRecipe.getPreperationTimeInMinute())
                             .append("\n").append("Instruction : ").append(selectedRecipe.getInstructions()).append("\n")
                             .append("Category : ").append(selectedRecipe.getCategory().name()).append("\n")
                             .append("Total Price : ").append(recipeService.getTotalPriceOfRecipe(selectedRecipe))
                             .append("\n");
+
                     for (RecipeIngredient recipeIngredient : recipeIngredientService.getByRecipeId(selectedRecipe.getId())) {
                         Ingredient ingredient = ingredientService.getById(recipeIngredient.getIngredientId());
-                        sb.append("Ingredient Name : ").append(ingredient.getName())
-                                .append("\n").append("Using Amount : ").append(recipeIngredient.getUsingAmount())
-                                .append("\n").append("Using Unit : ").append(recipeIngredient.getUnit().name())
-                                .append("\n").append("Price : ").append(UnitAndPriceConversation.calculatePrice(ingredient.getUnit(), ingredient.getUnitPrice(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount()))
+                        sb.append("Ingredient Name : ").append(ingredient.getName()).append("\n")
+                                .append("Using Amount : ").append(recipeIngredient.getUsingAmount()).append("\n")
+                                .append("Using Unit : ").append(recipeIngredient.getUnit().name()).append("\n")
+                                .append("Price : ").append(UnitAndPriceConversation.calculatePrice(ingredient.getUnit(), ingredient.getUnitPrice(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount()))
                                 .append("\n");
+
                         if (!UnitAndPriceConversation.isSufficentUsingAmount(ingredient.getUnit(), ingredient.getAmount(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount())) {
                             sb.append("There is less in the warehouse than the specified amount").append("\n");
                             recipeList.setRenderer(new DefaultListCellRenderer() {
-                                
                                 @Override
                                 public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                                     Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -472,7 +515,6 @@ public class RecipeFrame2 extends JFrame {
                                     }
                                     return component;
                                 }
-                                
                             });
                         }
                     }
@@ -482,20 +524,41 @@ public class RecipeFrame2 extends JFrame {
                 }
                 recipeInfo.setText(infoMessage);
             }
-            
         });
 
-        // Add sorting and filtering buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15)); // Yatay ve dikey boşluk ekleme
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Panelin kenarlarına boşluk
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         JButton sortByPriceButton = new JButton("Sort by Price");
         JButton sortByPrepTimeButton = new JButton("Sort by Preparation Time");
         JButton sortByIngredientAmountButton = new JButton("Sort by Ingredient Amount");
         JButton filterButton = new JButton("Filter");
-        JButton categoryButton = new JButton("Category");
 
-        // Sort by Price Action************************************** sorting için
+        buttonPanel.add(sortByPriceButton);
+        buttonPanel.add(sortByPrepTimeButton);
+        buttonPanel.add(sortByIngredientAmountButton);
+        buttonPanel.add(filterButton);
+
+        // Main panel layout
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        JPanel centerPanel = new JPanel(new BorderLayout());
+
+        leftPanel.add(recipeList, BorderLayout.CENTER);
+        centerPanel.add(new JScrollPane(recipeInfo), BorderLayout.CENTER);
+
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        showDialog.setLayout(new BorderLayout());
+        showDialog.add(filterPanel, BorderLayout.NORTH);  // Filter fields panel at the top
+        showDialog.add(mainPanel, BorderLayout.CENTER);    // Recipe list and info in the center
+        showDialog.add(buttonPanel, BorderLayout.SOUTH);   // Buttons at the bottom
+
+        // Display dialog
+        showDialog.pack();
+        showDialog.setVisible(true);
+
         sortByPriceButton.addActionListener(e -> {
             try {
                 List<String> recipeNames = new LinkedList();
@@ -549,63 +612,51 @@ public class RecipeFrame2 extends JFrame {
             }
         });
 
-        // Filter Action
         filterButton.addActionListener(e -> {
-            // Implement filter logic
-            // Example: open a dialog for filtering
-            JOptionPane.showMessageDialog(showDialog, "Filter functionality to be implemented.");
+            String name = nameField.getText();
+            try {
+                String maxPriceString = maxPriceField.getText();
+                String maxPreparationTimeString = maxPrepTimeField.getText();
+                String maxIngredientAmountString = maxIngredientAmountField.getText();
+                Integer maxPreparationTime = null;
+                Integer maxIngredientAmount = null;
+                Float maxPrice = null;
+
+                if (maxPriceString.isBlank() || maxPriceString.isEmpty()) {
+                    maxPrice = -1F;
+                } else {
+                    maxPrice = Float.parseFloat(maxPriceString);
+                }
+
+                if (maxPreparationTimeString.isBlank() || maxPreparationTimeString.isEmpty()) {
+                    maxPreparationTime = -1;
+                } else {
+                    maxPreparationTime = Integer.parseInt(maxPreparationTimeString);
+                }
+                if (maxIngredientAmountString.isBlank() || maxIngredientAmountString.isEmpty()) {
+                    maxIngredientAmount = -1;
+                } else {
+                    maxIngredientAmount = Integer.parseInt(maxIngredientAmountString);
+                }
+                String categoryName = (String) categoryComboBox.getSelectedItem();
+                List<Recipe> filteredRecipes = recipeService.filter(new FilterRequest(name, maxPreparationTime, categoryName, maxPrice, maxIngredientAmount));
+                recipeList.removeAllItems();
+                for (Recipe recipe : filteredRecipes) {
+                    recipeList.addItem(recipe);
+                }
+            } catch (NumberFormatException | SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
         });
-        
-        buttonPanel.add(sortByPriceButton);
-        buttonPanel.add(sortByPrepTimeButton);
-        buttonPanel.add(sortByIngredientAmountButton);
-        buttonPanel.add(filterButton);
-        buttonPanel.add(categoryButton);
-        
-        buttonPanel.setPreferredSize(new Dimension(500, 500));
-        
-        recipeInfo.setPreferredSize(new Dimension(400, 300)); // Genişlik: 400, Yükseklik: 300
-        recipeInfo.setLineWrap(true); // Satır sonuna gelindiğinde otomatik sar
-        recipeInfo.setWrapStyleWord(true); // Kelime tamamlandığında satır atla
 
-// recipeList ve recipeInfo için ayrı paneller oluşturma
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        JPanel centerPanel = new JPanel(new BorderLayout());
-
-// recipeList'i sola, orta hizalanmış bir şekilde ekleme
-        leftPanel.add(recipeList, BorderLayout.CENTER);
-
-// recipeInfo'yu merkeze ekleme
-        centerPanel.add(recipeInfo, BorderLayout.CENTER);
-
-// Ana panele sol ve orta panelleri ekleme
-        mainPanel.add(leftPanel, BorderLayout.WEST);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-
-// Ana paneli ve buttonPanel'i showDialog'a ekleme
-        showDialog.setLayout(new BorderLayout());
-        showDialog.add(mainPanel, BorderLayout.CENTER);
-        showDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-// Kapatma butonunu üst kısma ekleme
-        JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(e -> showDialog.dispose());
-        
-        JPanel closePanel = new JPanel();
-        closePanel.add(closeButton);
-        
-        showDialog.add(closePanel, BorderLayout.NORTH);
-
-// showDialog'u görünür yapma
-        showDialog.pack();
-        showDialog.setVisible(true);
+        // Show dialog
     }
-    
+
     private void openUpdateRecipePanel() {
-        // Create a JDialog for updating a recipe
+
+        String originalName = JOptionPane.showInputDialog("Please Enter Recipe Name");
         JDialog updateDialog = new JDialog(this, "Update Recipe", true); // true for modal
-        updateDialog.setSize(400, 200); // Adjusted size for better visibility
+        updateDialog.setSize(500, 500); // Adjusted size for better visibility
         updateDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         updateDialog.setLocationRelativeTo(this); // Center the dialog
 
@@ -614,8 +665,98 @@ public class RecipeFrame2 extends JFrame {
         panel.setLayout(new GridBagLayout());
 
         // Create and style the components
-        JLabel nameLabel = new JLabel("Enter Recipe Name:");
-        JTextField recipeNameField = new JTextField(20); // Wider text field for recipe name
+        JLabel nameLabel = new JLabel("Recipe Name:");
+        JTextField nameField = new JTextField(20);
+
+        JLabel categoryLabel = new JLabel("Category:");
+        JComboBox<Category> categoryComboBox = new JComboBox<>(Category.values());
+
+        JLabel prepTimeLabel = new JLabel("Preparation Time (min):");
+        JTextField prepTimeField = new JTextField(5);
+
+        JLabel instructionsLabel = new JLabel("Instructions:");
+        JTextArea instructionsArea = new JTextArea(5, 20);
+        instructionsArea.setLineWrap(true);
+        instructionsArea.setWrapStyleWord(true);
+        JScrollPane instructionsScrollPane = new JScrollPane(instructionsArea);
+
+        // Ingredients section
+        JLabel ingredientLabel = new JLabel("Select Ingredient:");
+        JComboBox<String> ingredientsToAddComboBox = new JComboBox<>();
+        try {
+            Recipe recipe = recipeService.getByName(originalName);
+            List<Ingredient> ingredients = ingredientService.getAll();
+            for (Ingredient ingredient : ingredients) {
+                boolean notAddedIngredient = true;
+                for (RecipeIngredient recipeIngredient : recipeIngredientService.getByRecipeId(recipe.getId())) {
+                    if (recipeIngredient.getIngredientId().longValue() == ingredient.getId().longValue()) {
+                        notAddedIngredient = false;
+                        break;
+                    }
+                }
+                if (notAddedIngredient) {
+                    ingredientsToAddComboBox.addItem(ingredient.getName());
+                }
+            }
+        } catch (SQLException | RecipeException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        JTextField quantityField = new JTextField(5);
+        JLabel unitLabel = new JLabel("Unit:");
+        JComboBox<Unit> units = new JComboBox<>(Unit.values());
+
+        JLabel usingAmountLabel = new JLabel("Using Amount :");
+        JTextField usingAmountField = new JTextField(5);
+
+        JButton addIngredientButton = new JButton("Add Ingredient");
+
+        JComboBox<RecipeIngredient> ingredientsToRemove = new JComboBox<>();
+        try {
+            Recipe recipe = recipeService.getByName(originalName);
+            for (RecipeIngredient recipeIngredient : recipeIngredientService.getByRecipeId(recipe.getId())) {
+                ingredientsToRemove.addItem(recipeIngredient);
+            }
+        } catch (SQLException | RecipeException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        JButton removeIngredientButton = new JButton("Remove Ingredient");
+
+        removeIngredientButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RecipeIngredient recipeIngredientToRemove = (RecipeIngredient) ingredientsToRemove.getSelectedItem();
+                try {
+                    String ingredientName = ingredientService.getById(recipeIngredientToRemove.getIngredientId()).getName();
+                    ingredientsToAddComboBox.addItem(ingredientName);
+                    ingredientsToRemove.removeItem(recipeIngredientToRemove);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+
+            }
+
+        });
+
+        addIngredientButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String ingredientName = (String) ingredientsToAddComboBox.getSelectedItem();
+                    Ingredient ingredient = ingredientService.getByName(ingredientName);
+                    RecipeIngredient recipeIngredient = recipeIngredientService.createRecipeIngredientForGui(new RecipeIngredientAddingRequestGui(ingredient.getId(), (Unit) units.getSelectedItem(), Float.parseFloat(usingAmountField.getText())));
+                    recipeIngredient.setRecipeId(recipeService.getByName(originalName).getId());
+                    ingredientsToAddComboBox.removeItem(ingredientName);
+                    ingredientsToRemove.addItem(recipeIngredient);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+
+        });
+
         JButton updateButton = new JButton("Update");
 
         // Use GridBagConstraints for layout
@@ -626,35 +767,101 @@ public class RecipeFrame2 extends JFrame {
         // Add components to the panel
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST; // Align label to the left
         panel.add(nameLabel, gbc);
-        
+
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 1.0; // Allow the text field to expand
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontally
-        panel.add(recipeNameField, gbc);
-        
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(nameField, gbc);
+
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 2; // Make button span both columns
-        gbc.fill = GridBagConstraints.NONE; // Reset fill for button
+        gbc.gridwidth = 1;
+        panel.add(categoryLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        panel.add(categoryComboBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(prepTimeLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        panel.add(prepTimeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(instructionsLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(instructionsScrollPane, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(ingredientLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        panel.add(ingredientsToAddComboBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        panel.add(new JLabel("Quantity:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        panel.add(quantityField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        panel.add(unitLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        panel.add(units, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        panel.add(addIngredientButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.gridwidth = 2;
+        panel.add(ingredientsToRemove, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 2;
+        panel.add(removeIngredientButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
         panel.add(updateButton, gbc);
 
         // Action listener for the update button
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String recipeName = recipeNameField.getText(); // Get the recipe name
+                String recipeName = nameField.getText();
                 if (!recipeName.isEmpty()) {
-                    
-
-                    JOptionPane.showMessageDialog(updateDialog,
-                            "You are now ready to update \"" + recipeName + "\".",
-                            "Update Recipe",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    // Close the dialog after user confirmation
-                    updateDialog.dispose();
+                    Category category = (Category) categoryComboBox.getSelectedItem();
+                    try {
+                        RecipeAddingRequest recipeAddingRequest = new RecipeAddingRequest(nameField.getText(), category, Integer.parseInt(prepTimeField.getText()), instructionsArea.getText());
+                        recipeService.updateRecipe(recipeAddingRequest, recipeService.getByName(originalName).getId());
+                        JOptionPane.showMessageDialog(null, "Successful");
+                    } catch (SQLException | NumberFormatException | RecipeException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
                 } else {
                     JOptionPane.showMessageDialog(updateDialog,
                             "Please enter a recipe name.",
@@ -666,18 +873,18 @@ public class RecipeFrame2 extends JFrame {
 
         // Add the panel to the dialog
         updateDialog.add(panel);
-        updateDialog.setVisible(true); // Show the dialog
+        updateDialog.setVisible(true);
     }
 
     // Background Panel inner class
     private static class BackgroundPanel extends JPanel {
-        
+
         private Image backgroundImage;
-        
+
         public BackgroundPanel(String imagePath) {
             backgroundImage = new ImageIcon(imagePath).getImage();
         }
-        
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -686,7 +893,7 @@ public class RecipeFrame2 extends JFrame {
             }
         }
     }
-    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             RecipeFrame2 frame = new RecipeFrame2();
