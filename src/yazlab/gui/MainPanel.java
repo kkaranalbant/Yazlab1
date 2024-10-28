@@ -15,7 +15,7 @@ public class MainPanel extends JFrame {
         setTitle("Tarifler");
 
         // Set window size
-        setSize(400, 300);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
 
@@ -36,7 +36,7 @@ public class MainPanel extends JFrame {
         addIngredientButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new IngredientPanel().setVisible(true);;
+                new IngredientPanel().setVisible(true);
             }
         });
 
