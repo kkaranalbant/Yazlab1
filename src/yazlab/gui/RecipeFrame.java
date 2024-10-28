@@ -25,6 +25,7 @@ import yazlab.request.FilterRequest;
 import yazlab.request.RecipeAddingRequest;
 import yazlab.request.RecipeIngredientAddingRequest;
 import yazlab.request.RecipeIngredientAddingRequestGui;
+import yazlab.service.UnitAndPriceConversation;
 
 /**
  *
@@ -1085,7 +1086,11 @@ public class RecipeFrame extends javax.swing.JFrame {
                 sb.append("Ingredient Name : ").append(ingredient.getName())
                         .append("\n").append("Using Amount : ").append(recipeIngredient.getUsingAmount())
                         .append("\n").append("Using Unit : ").append(recipeIngredient.getUnit().name())
-                        .append("\n");
+                        .append("\n").append("Price : ").append(UnitAndPriceConversation.calculatePrice(ingredient.getUnit(), ingredient.getUnitPrice(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount()))
+                        .append("\n") ;
+                if (!UnitAndPriceConversation.isSufficentUsingAmount(ingredient.getUnit(), ingredient.getAmount(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount())) {
+                    sb.append("There is less in the warehouse than the specified amount").append("\n") ;
+                }
             }
             infoMessage = sb.toString();
         } catch (SQLException ex) {
