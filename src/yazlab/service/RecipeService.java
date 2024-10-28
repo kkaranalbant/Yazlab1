@@ -16,10 +16,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import yazlab.model.Category;
+import yazlab.model.Ingredient;
 import yazlab.model.Recipe;
 import yazlab.model.RecipeIngredient;
+import yazlab.model.Unit;
 import yazlab.request.FilterRequest;
 
 /**
@@ -209,7 +210,8 @@ public class RecipeService {
         List<RecipeIngredient> recipeIngredients = recipeIngredientService.getByRecipeId(recipe.getId());
         Float totalRecipePrice = 0F;
         for (RecipeIngredient recipeIngredient : recipeIngredients) {
-            Float recipeIngredientPrice = recipeIngredient.getUsingAmount() * ingredientService.getById(recipeIngredient.getIngredientId()).getUnitPrice();
+            Ingredient ingredient = ingredientService.getById(recipeIngredient.getIngredientId());
+            Float recipeIngredientPrice = UnitAndPriceConversation.calculatePrice(ingredient.getUnit(), ingredient.getUnitPrice(), recipeIngredient.getUnit(), recipeIngredient.getUsingAmount());
             totalRecipePrice += recipeIngredientPrice;
         }
         return totalRecipePrice;
@@ -241,9 +243,6 @@ public class RecipeService {
                 String key = getKeyAndRemoveFromMap(notSortedMap, (T) valueArray[i], clazz);
                 sortedMap.put(key, (T) valueArray[i]);
             }
-//            for (Map.Entry<String, T> entry : sortedMap.entrySet()) {
-//                System.out.println(entry.getKey() + " : " + entry.getValue());
-//            }
         }
         return sortedMap;
     }
